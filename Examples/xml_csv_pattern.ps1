@@ -59,7 +59,7 @@ Function Format-XmlResultsAsCsv
     
     $Array |Export-csv "$Path\$CsvFile"
 
-   Import-csv "$Path\$CsvFile"
+    Import-csv "$Path\$CsvFile"
 }
 
 Format-XmlResultsAsCsv
