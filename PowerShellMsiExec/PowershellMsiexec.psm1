@@ -19,9 +19,10 @@ function Get-Logs
 {
     [CmdletBinding()]
     Param([Parameter(Mandatory=$True)]$Path)
-    $Path = "C:\logs"
 
-    $LogFiles = Get-ChildItem -Path $Path
+    $LogFiles = Get-ChildItem -Path $Path -File
+
+    $ArrayList = New-Object -TypeName System.Collections.ArrayList
 
     Foreach($LogFile in $LogFiles)
     {
@@ -42,7 +43,15 @@ function Get-Logs
         $LogObject | Add-Member -MemberType NoteProperty -Name 'ProductInfo' -Value $ProductInfo
         $LogObject | Add-Member -MemberType NoteProperty -Name 'ErrorStatus' -Value $ErrorStatus
         
-        Return $LogObject
+        $ArrayList.Add($LogObject) | Out-Null
     }
 
+    $Array = New-Object Object[] ($ArrayList.Count)
+    
+    For($i=0; $i -lt $ArrayList.Count; $i++)
+    {
+        $Array[$i] = $ArrayList[$i]
+    }
+
+    Return $Array
 }
