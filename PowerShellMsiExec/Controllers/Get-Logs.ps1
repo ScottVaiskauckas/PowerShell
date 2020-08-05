@@ -6,7 +6,13 @@ Function Controller
     Get-Logs -Path C:\Logs
 }
 
-$Result = Controller
-$Result.OperationType
-$Result.ProductInfo
-$Result.ErrorStatus
+$ResultArray = Controller
+
+Foreach($Result in $ResultArray)
+{
+Write-Host ""
+Write-Host $Result.OperationType
+Write-Host $Result.ProductInfo
+Write-Host $Result.ErrorStatus
+Write-Host ""
+}
