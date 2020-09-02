@@ -1,105 +1,96 @@
-﻿Function ArrayListExample
+﻿# Display array or arraylist and elements in the console
+Function DisplayCollection
 {
-    $ArrayList = New-Object -TypeName System.Collections.ArrayList
-    
-    #Add method is chatty. It writes the element value to the console
-    #We pipe that to Out-Null so we don't see it
-    $ArrayList.Add("Spam") |Out-Null
-    $ArrayList.Add("Bacon") |Out-Null
-    $ArrayList.Add("Eggs") |Out-Null
-    
-    <#Weird Syntax is String Interpolation. $Count = $Arraylist.count
-    #Is the same as $($ArrayList.count)
-    #>
+    param($Collection)
 
-    Write-Host "Arraylist: $($ArrayList[0]) $($ArrayList[1]) $($ArrayList[2])"
-    
-    # ` is the escape char in powershell `n = newline
+    Write-Host ""
+    $Type = $Collection.getType()
+    $TypeName = $Type.Name
 
-    Write-Host "Arraylist.count: $($Arraylist.count)`n"
+    Write-Host "Print $TypeName to console: $Collection"
 
-    $Arraylist.Remove("Spam") | Out-Null
-
-    Write-Host "Arraylist: $($ArrayList[0]) $($ArrayList[1]) $($ArrayList[2])"
-    
-    # ` is the escape char in powershell `n = newline
-
-    Write-Host "Arraylist.count: $($Arraylist.count)`n"
+    $ElementCount = 0
+    Foreach($Item in $Collection)
+    {
+        Write-Host "Print $TypeName Element $ElementCount : $Item"
+        $ElementCount++
     }
 
-ArrayListExample
+}
 
 Function ArrayExample
 {
-    $Array0 = @("Spam", "Eggs", "Bacon")
+    #Initialize Array0. This is the more common way to initialize arrays
 
-    #Weird Syntax = Calling new method on Static class System.Object[]
-    #Also demonstrating polymorphism in that we are casting it to string[]
-    [string[]] $Array1 = [System.Object[]]::new(3)
+    $Array0 = @("Potatoes", "Eggs", "Sausage")
 
-    #Try commenting out [string[]] and uncommenting
-    #the line below to see what I mean
-    #$Array1.getType()
+    # Initialize Array1. This is the less common way to initialize arrays.
+    # Weird Syntax = Calling new method on Static class System.Object[]
 
-    Write-Host "Array0: $Array0"
-    Write-Host "Array0.count: $($Array0.count)`n"
-
-    $Array1[0] = "Spam1"
-
+    $Array1 = [System.Object[]]::new(3)
+    $Array1[0] = "Chorizo"
     $Array1[1] = "Eggs"
+    $Array1[2] = "Cheese"
 
-    $Array1[2] = "Bacon"
+    DisplayCollection($Array0)
 
-    Write-Host "Array1: $Array1"
-    $Array1Count = $Array1.count
-    Write-Host "Array1.count: $Array1Count`n"
+    DisplayCollection($Array1)
+} 
 
-    #Example 1:
-    #Don't fall victim to this rookie mistake:
-    Write-Host '$Array1 = $Array0'
-    $Array1 = $Array0
-    Write-Host '$Array0 == $Array1 ' -NoNewline
-    $Array0.Equals($Array1)
-    Write-Host ''
+Function ArrayListExample
+{
 
+    # Initialize an arraylist
 
-    #It works below why wouldn't it work above?? ;p
+    $Arraylist = New-Object -TypeName System.Collections.ArrayList
 
-    Write-Host '$Array2 = $Array0'
-    $Array2 = $Array0
-    Write-Host '$Array0 == $Array2 ' -NoNewline
-    $Array0.Equals($Array2)
+    # Add Elements to the arraylist
 
-    Write-Host ''
+    $Arraylist.add("Spam") | Out-Null
+    $Arraylist.add("Bacon") | Out-Null
+    $Arraylist.add("Eggs") | Out-Null
 
-    #Use compare-object instead of the Equals method
+    DisplayCollection($Arraylist)
 
-    Write-Host "Compare Object Example:`n"
+    # Remove an element
 
-    $Object0 = Compare-Object -ReferenceObject $Array0 -DifferenceObject $Array1
+    $Arraylist.remove("Spam")
 
-    if($Object0)
-    {
-        Write-Host $True
-    }
-    Else
-    {
-        Write-Host $False
-    }
+    DisplayCollection($Arraylist)
+}
 
-    [string[]] $Array3 = @("Spam1", "Eggs1", "Bacon1")
+Function BuildArraylistAssignToArray
+{
+        # Initialize an arraylist
 
-    $Object1 = Compare-Object -ReferenceObject $Array2 -DifferenceObject $Array3
+        $Arraylist = New-Object -TypeName System.Collections.ArrayList
+
+        # Add Elements to the arraylist
+
+        $Arraylist.add("Spam") | Out-Null
+        $Arraylist.add("Bacon") | Out-Null
+        $Arraylist.add("Eggs") | Out-Null
     
-    if($Object1)
-    {
-        $True
-    }
-    Else
-    {
-        $False
-    }
-}    
-    
+        DisplayCollection($Arraylist)
 
+        # Initialize an array and set it's length equal to the length of the arraylist
+
+        [object[]] $Array = [System.Object[]]::new($Arraylist.Count)
+
+        # Assign arraylist elements to array
+
+        For($i=0; $i -LT $Arraylist.Count; $i++)
+        {
+            $Array[$i] = $Arraylist[$i]
+        }
+
+        #Return the array so we can use it in the pipeline
+
+        return $Array
+} 
+    
 ArrayExample
+
+ArrayListExample
+
+BuildArraylistAssignToArray | Out-GridView
