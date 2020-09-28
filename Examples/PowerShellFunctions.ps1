@@ -8,7 +8,20 @@ Function Spam()
 
 Spam
 
-###Eggs function with input parameters###
+###Cheese function with positional input parameters###
+Function Cheese()
+{
+    $Cheese = $args[0]
+    Write-Host "Function Cheese output:"
+    Write-Host "Hi, my name is $Cheese"
+    Write-Host ""
+}
+
+Cheese "Gruyere"
+
+Cheese "Swiss"
+
+###Eggs function with named input parameters###
 Function Eggs()
 {
     param($Spam)
