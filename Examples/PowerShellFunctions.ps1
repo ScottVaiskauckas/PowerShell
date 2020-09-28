@@ -21,7 +21,7 @@ Eggs -Spam "Eggs"
 
 Eggs -Spam "Bacon"
 
-###Eggs function with input parameters with default value###
+###Bacon function with input parameters with default value###
 Function Bacon()
 {
     param($Spam="Bacon")
